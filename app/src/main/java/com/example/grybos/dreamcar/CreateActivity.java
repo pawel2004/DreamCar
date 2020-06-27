@@ -16,11 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.example.grybos.dreamcar.MainActivity.dir;
@@ -38,7 +40,13 @@ public class CreateActivity extends AppCompatActivity {
     private int entry;
     private String path_string, name_string, year_string, power_string, engine_string, price_string;
     private Bitmap b;
-    private boolean isAdded = false;
+    private boolean isAdded;
+    private File img_file;
+    private ArrayList<Record> list;
+    private int position;
+    private String path;
+    private Record record;
+    private boolean isChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,33 @@ public class CreateActivity extends AppCompatActivity {
                 null,
                 1
         );
+
+        if (entry == 1){
+
+            list = (ArrayList<Record>) getIntent().getExtras().getSerializable("list");
+            position = bundle.getInt("position");
+            path = bundle.getString("path");
+            record = list.get(position);
+
+        }
+
+        if (entry == 0){
+            isAdded = false;
+        }
+        else {
+            if (path != null)
+            {
+                isAdded = true;
+            }
+            else {
+                isAdded = false;
+            }
+        }
+
+        if (entry == 1)
+        {
+            placing();
+        }
 
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -131,6 +166,48 @@ public class CreateActivity extends AppCompatActivity {
                             finish();
 
                         }
+                        else {
+
+                            if (isAdded) {
+
+                                if (isChanged) {
+
+                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                    b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                    byte[] byteArray = stream.toByteArray();
+
+                                    SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                                    String d = df.format(new Date());
+
+                                    path_string = dir.getPath() + "/" + d + ".jpg";
+
+                                    FileOutputStream fs = null;
+
+                                    try {
+                                        fs = new FileOutputStream(path_string);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        fs.write(byteArray);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        fs.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    db.edit(record.getId(), path_string, name_string, year_string, power_string, engine_string, price_string);
+                                }
+
+                                if (!isChanged)
+                                {db.edit(record.getId(), path, name_string, year_string, power_string, engine_string, price_string);}
+                                finish();
+
+                            }
+
+                        }
 
                     }
                 });
@@ -144,6 +221,45 @@ public class CreateActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void placing(){
+
+        if (isAdded){
+            img_file = new File(path);
+            b = betterImageDecode(path, 1);    // funkcja betterImageDecode opisana jest poniżej
+            image.setImageBitmap(b);
+            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+
+        if (record.getName().length() > 0){
+            name.setText(record.getName());
+        }
+
+        if (record.getYear().length() > 0){
+
+            year.setText(record.getYear());
+
+        }
+
+        if (record.getPower().length() > 0){
+
+            power.setText(record.getPower());
+
+        }
+
+        if (record.getEngine().length() > 0){
+
+            engine.setText(record.getEngine());
+
+        }
+
+        if (record.getPrice().length() > 0){
+
+            price.setText(record.getPrice());
+
+        }
 
     }
 
@@ -163,14 +279,35 @@ public class CreateActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                isAdded = true;
+                if (entry == 1){
+
+                    if (isAdded){
+
+                        img_file.delete();
+                        isChanged = true;
+
+                    }
+
+                }
 
                 image.setImageBitmap(b);
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                isAdded = true;
 
             }
 
         }
 
+    }
+
+    private Bitmap betterImageDecode(String filePath, int size) {
+        Bitmap myBitmap;
+        BitmapFactory.Options options = new BitmapFactory.Options();    //opcje przekształcania bitmapy
+        options.inSampleSize = size; // zmniejszenie jakości bitmapy 4x
+        options.inScaled = true;
+        //
+        myBitmap = BitmapFactory.decodeFile(filePath, options);
+        return myBitmap;
     }
 }

@@ -77,4 +77,21 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return db.delete("cars", "_id = ?", new String[]{id});
 
     }
+
+    public void edit (String id, String path, String name, String year, String power, String engine, String price){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("path", path);
+        contentValues.put("name", name);
+        contentValues.put("year", year);
+        contentValues.put("power", power);
+        contentValues.put("engine", engine);
+        contentValues.put("price", price);
+
+        db.update("cars", contentValues, "_id = ?", new String[]{id});
+        db.close();
+
+    }
 }

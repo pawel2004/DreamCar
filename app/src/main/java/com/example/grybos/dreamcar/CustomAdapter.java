@@ -42,7 +42,7 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(_resource, null);
 
         final ImageView image = (ImageView) convertView.findViewById(R.id.image);
@@ -105,6 +105,13 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(_context, CreateActivity.class);
+                intent.putExtra("key", 1);
+                intent.putExtra("path", _list.get(position).getPath());
+                intent.putExtra("list", _list);
+                intent.putExtra("position", position);
+                _context.startActivity(intent);
 
             }
         });
