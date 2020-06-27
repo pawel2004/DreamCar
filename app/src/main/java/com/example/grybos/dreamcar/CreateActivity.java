@@ -88,10 +88,10 @@ public class CreateActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         name_string = name.getText().toString();
-                        year_string = name.getText().toString();
-                        power_string = name.getText().toString();
-                        engine_string = name.getText().toString();
-                        price_string = name.getText().toString();
+                        year_string = year.getText().toString();
+                        power_string = power.getText().toString();
+                        engine_string = engine.getText().toString();
+                        price_string = price.getText().toString();
 
                         if (entry == 0){
 

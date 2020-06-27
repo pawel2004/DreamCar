@@ -2,6 +2,7 @@ package com.example.grybos.dreamcar;
 
 public class Record {
 
+    private String id;
     private String path;
     private String name;
     private String year;
@@ -9,13 +10,19 @@ public class Record {
     private String engine;
     private String price;
 
-    public Record(String path, String name, String year, String power, String engine, String price) {
+    public Record(String id, String path, String name, String year, String power, String engine, String price) {
+
+        this.id = id;
         this.path = path;
         this.name = name;
         this.year = year;
         this.power = power;
         this.engine = engine;
         this.price = price;
+    }
+
+    public String getId(){
+        return id;
     }
 
     public String getPath() {

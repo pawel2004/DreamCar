@@ -56,6 +56,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         while (result.moveToNext()){
 
             records.add(new Record(
+                    result.getString(result.getColumnIndex("_id")),
                     result.getString(result.getColumnIndex("path")),
                     result.getString(result.getColumnIndex("name")),
                     result.getString(result.getColumnIndex("year")),
@@ -67,5 +68,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         }
         return records;
+    }
+
+    public int delete(String id){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete("cars", "_id = ?", new String[]{id});
+
     }
 }

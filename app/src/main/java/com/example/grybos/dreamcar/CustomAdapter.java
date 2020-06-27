@@ -1,14 +1,18 @@
 package com.example.grybos.dreamcar;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -19,7 +23,7 @@ public class CustomAdapter extends ArrayAdapter {
     private ArrayList<Record> _list;
     private Context _context;
     private int _resource;
-    private Bitmap bmp;
+    private DatabaseManager db;
 
     public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList objects, DatabaseManager db) {
         super(context, resource, objects);
@@ -27,6 +31,7 @@ public class CustomAdapter extends ArrayAdapter {
         this._list = objects;
         this._context = context;
         this._resource = resource;
+        this.db = db;
 
     }
 
@@ -45,9 +50,9 @@ public class CustomAdapter extends ArrayAdapter {
 
         }else {
 
-            bmp = betterImageDecode(_list.get(position).getPath(), 1);
+            Uri uri = Uri.fromFile(new File(_list.get(position).getPath()));
+            image.setImageURI(uri);
 
-            image.setImageBitmap(bmp);
         }
 
         image.setOnClickListener(new View.OnClickListener() {
@@ -58,15 +63,37 @@ public class CustomAdapter extends ArrayAdapter {
         });
 
         ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
-        image.setOnClickListener(new View.OnClickListener() {
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(_context);
+                alert.setTitle("Czy chcesz to usunąć?");
+                alert.setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        db.delete(_list.get(position).getId());
+                        _list.remove(position);
+                        notifyDataSetChanged();
+
+                    }
+                });
+                alert.setNegativeButton("Nie", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+
+                    }
+                });
+                alert.show();
 
             }
         });
 
         ImageView edit = (ImageView) convertView.findViewById(R.id.edit);
-        image.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -75,16 +102,6 @@ public class CustomAdapter extends ArrayAdapter {
 
         return convertView;
 
-    }
-
-    private Bitmap betterImageDecode(String filePath, int size) {
-        Bitmap myBitmap;
-        BitmapFactory.Options options = new BitmapFactory.Options();    //opcje przekształcania bitmapy
-        options.inSampleSize = size; // zmniejszenie jakości bitmapy 4x
-        options.inScaled = true;
-        //
-        myBitmap = BitmapFactory.decodeFile(filePath, options);
-        return myBitmap;
     }
 
 }
