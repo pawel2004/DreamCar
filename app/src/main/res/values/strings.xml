@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dream Car</string>
+    <string name="editText1">Nazwa</string>
+    <string name="editText2">Rok produkcji</string>
+    <string name="editText3">Moc</string>
+    <string name="editText4">Silnik</string>
+    <string name="editText5">Cena</string>
 </resources>

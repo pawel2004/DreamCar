@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateActivity"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/image_height"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageView"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editText_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/editText1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:id="@+id/name"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editText_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/editText2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:id="@+id/year"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editText_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/editText3"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:id="@+id/power"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editText_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/editText4"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:id="@+id/engine"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/editText_height"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="@string/editText5"
+            android:textColor="@color/black"
+            android:textSize="@dimen/app_name_text_size"
+            android:id="@+id/price"/>
+
+    </LinearLayout>
+
+</LinearLayout>
