@@ -3,7 +3,9 @@ package com.example.grybos.dreamcar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -12,6 +14,7 @@ import android.widget.ListView;
 
 import com.amitshekhar.DebugDB;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
     //zmienne
     private ListView listView;
     private ImageView add;
-    private ArrayList<String> list = new ArrayList<>();
+    private ArrayList<Record> list = new ArrayList<>();
+    private File pic;
+    public static File dir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,33 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list1);
         add = findViewById(R.id.add);
 
+        pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+        if (!pic.exists()){
+
+            pic.mkdir();
+
+        }
+
+        dir = new File(pic, "DreamCar");
+        dir.mkdir();
+
+        DatabaseManager db = new DatabaseManager(
+                MainActivity.this,
+                "Samochody.db",
+                null,
+                1
+        );
+
+        list.clear();
+
+        list = db.getAll();
+
         CustomAdapter adapter = new CustomAdapter(
                 MainActivity.this,
                 R.layout.listview_layout,
-                list
+                list,
+                db
         );
         listView.setAdapter(adapter);
 
@@ -50,6 +78,37 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void refresh(){
+
+        DatabaseManager db = new DatabaseManager(
+                MainActivity.this,
+                "Samochody.db",
+                null,
+                1
+        );
+
+        list.clear();
+
+        list = db.getAll();
+
+        CustomAdapter adapter = new CustomAdapter(
+                MainActivity.this,
+                R.layout.listview_layout,
+                list,
+                db
+        );
+        listView.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refresh();
 
     }
 }
