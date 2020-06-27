@@ -3,6 +3,7 @@ package com.example.grybos.dreamcar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,17 +14,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class CustomAdapter extends ArrayAdapter {
+public class CustomAdapter extends ArrayAdapter implements Serializable {
 
     private ArrayList<Record> _list;
     private Context _context;
     private int _resource;
     private DatabaseManager db;
+    private File image_file;
 
     public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList objects, DatabaseManager db) {
         super(context, resource, objects);
@@ -46,18 +49,25 @@ public class CustomAdapter extends ArrayAdapter {
 
         if (_list.get(position).getPath() == null){
 
-            image.setImageResource(R.drawable.baseline_clear_black_36dp);
+            image.setImageResource(R.drawable.baseline_photo_black_36dp);
 
         }else {
 
             Uri uri = Uri.fromFile(new File(_list.get(position).getPath()));
             image.setImageURI(uri);
+            image_file = new File(_list.get(position).getPath());
 
         }
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(_context, PreviewActivity.class);
+                intent.putExtra("path", _list.get(position).getPath());
+                intent.putExtra("list", _list);
+                intent.putExtra("position", position);
+                _context.startActivity(intent);
 
             }
         });
@@ -74,6 +84,7 @@ public class CustomAdapter extends ArrayAdapter {
                     public void onClick(DialogInterface dialog, int which) {
 
                         db.delete(_list.get(position).getId());
+                        image_file.delete();
                         _list.remove(position);
                         notifyDataSetChanged();
 
@@ -82,8 +93,6 @@ public class CustomAdapter extends ArrayAdapter {
                 alert.setNegativeButton("Nie", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-
 
                     }
                 });

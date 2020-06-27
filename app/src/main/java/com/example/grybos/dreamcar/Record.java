@@ -1,6 +1,8 @@
 package com.example.grybos.dreamcar;
 
-public class Record {
+import java.io.Serializable;
+
+public class Record implements Serializable {
 
     private String id;
     private String path;

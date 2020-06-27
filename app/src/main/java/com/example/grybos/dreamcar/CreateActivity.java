@@ -38,6 +38,7 @@ public class CreateActivity extends AppCompatActivity {
     private int entry;
     private String path_string, name_string, year_string, power_string, engine_string, price_string;
     private Bitmap b;
+    private boolean isAdded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,31 +96,35 @@ public class CreateActivity extends AppCompatActivity {
 
                         if (entry == 0){
 
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            byte[] byteArray = stream.toByteArray();
+                            if (isAdded) {
 
-                            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                            String d = df.format(new Date());
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                b.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                byte[] byteArray = stream.toByteArray();
 
-                            path_string = dir.getPath() + "/" + d + ".jpg";
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                                String d = df.format(new Date());
 
-                            FileOutputStream fs = null;
+                                path_string = dir.getPath() + "/" + d + ".jpg";
 
-                            try {
-                                fs = new FileOutputStream(path_string);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                fs.write(byteArray);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                fs.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                FileOutputStream fs = null;
+
+                                try {
+                                    fs = new FileOutputStream(path_string);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    fs.write(byteArray);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    fs.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
 
                             db.insert(path_string, name_string, year_string, power_string, engine_string, price_string);
@@ -157,6 +162,8 @@ public class CreateActivity extends AppCompatActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+
+                isAdded = true;
 
                 image.setImageBitmap(b);
                 image.setScaleType(ImageView.ScaleType.CENTER_CROP);
