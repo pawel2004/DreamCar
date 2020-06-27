@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/outline_add_black_36dp"
-            android:layout_weight="4"/>
+            android:layout_weight="4"
+            android:id="@+id/add"/>
 
     </LinearLayout>
 
