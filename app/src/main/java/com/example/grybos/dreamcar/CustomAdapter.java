@@ -26,7 +26,7 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
     private Context _context;
     private int _resource;
     private DatabaseManager db;
-    private File image_file;
+    private ArrayList<File> image_files = new ArrayList<>();
 
     public CustomAdapter(@NonNull Context context, int resource, @NonNull ArrayList objects, DatabaseManager db) {
         super(context, resource, objects);
@@ -35,6 +35,8 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
         this._context = context;
         this._resource = resource;
         this.db = db;
+
+        image_files.clear();
 
     }
 
@@ -55,7 +57,7 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
 
             Uri uri = Uri.fromFile(new File(_list.get(position).getPath()));
             image.setImageURI(uri);
-            image_file = new File(_list.get(position).getPath());
+            image_files.add(new File(_list.get(position).getPath()));
 
         }
 
@@ -84,7 +86,12 @@ public class CustomAdapter extends ArrayAdapter implements Serializable {
                     public void onClick(DialogInterface dialog, int which) {
 
                         db.delete(_list.get(position).getId());
-                        image_file.delete();
+                        if (image_files.size() > 0){
+
+                            image_files.get(position).delete();
+                            image_files.remove(position);
+
+                        }
                         _list.remove(position);
                         notifyDataSetChanged();
 
